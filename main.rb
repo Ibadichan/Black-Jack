@@ -1,49 +1,38 @@
-require_relative 'arm'
+require_relative 'player'
+require_relative 'deck'
+require_relative 'dealer'
 
-class GAME
-  attr_reader :deck, :player, :message_of_dealer, :dealer
+class Game
+  attr_reader :deck, :player, :dealer, :message_of_dealer
 
   def initialize
-    @player = ARM.new
-    @dealer = ARM.new
-    create_deck
+    @player = Player.new
+    @dealer = Dealer.new
+    @deck = Deck.new
+    @deck.create_cards
     give_out_cards
-
-  end
-
-  def create_deck
-    card_numbers = [2,3,4,5,6,7,8,9,10,'Jack','Queen','King','Ace']
-    @deck = []
-    card_numbers.each do |card|
-      @deck << "#{card}♥"
-      @deck << "#{card}♣"
-      @deck << "#{card}♠"
-      @deck << "#{card}♦"
-    end
   end
 
   def give_out_cards
     2.times do
-      element = @deck[rand(@deck.length)]
+      element = @deck.all_cards[rand(@deck.all_cards.length)]
       @player.cards << element
-      @deck.delete(element)
-      element = @deck[rand(@deck.length)]
+      @deck.all_cards.delete(element)
+      element = @deck.all_cards[rand(@deck.all_cards.length)]
       @dealer.cards << element
-      @deck.delete(element)
+      @deck.all_cards.delete(element)
     end
   end
 
-  def add_card
-    element = @deck[rand(@deck.length)]
-    @player.cards << element
-    @deck.delete(element)
-    move_of_dealer
-  end
-
-  def add_card_dealer
-    element = @deck[rand(@deck.length)]
-    @dealer.cards << element
-    @deck.delete(element)
+  def add_card(people)
+    element = @deck.all_cards[rand(@deck.all_cards.length)]
+    if people == 'player'
+      @player.cards << element
+      move_of_dealer
+    elsif people == 'dealer'
+      @dealer.cards << element
+    end
+    @deck.all_cards.delete(element)
   end
 
   def count_score(cards)
@@ -60,7 +49,7 @@ class GAME
   def move_of_dealer
    count = count_score(@dealer.cards)
     if count <  15 && @dealer.methods.include?('add_card')
-      add_card_dealer
+      add_card('dealer')
       @message_of_dealer = 'dealer added card'
       @dealer.methods.delete('add_card')
    elsif
@@ -77,13 +66,17 @@ class GAME
     dealer = count_score(@dealer.cards)
     player = count_score(@player.cards)
      if (dealer < player ||  dealer > 21) && player <= 21
-       @player.bank += 10
-       puts 'YOU WIN !!!'
+       @player.bank += 20
+       @dealer.bank -= 10
+       puts 'YOU WIN  !!! +10$'
      elsif (dealer > player || player > 21) && dealer <= 21
-       @dealer.bank += 10
-       puts 'YOU LOST !!!'
+       @dealer.bank += 20
+       @player.bank -= 10
+       puts 'YOU LOST !!! -10$'
      else
-       puts 'No one wins !!! '
+       puts 'No one wins !!! +0$'
+       @dealer.bank += 10
+       @player.bank += 10
      end
   end
 end
@@ -99,23 +92,22 @@ puts ''
 
 puts 'For game enter your name please (:'
 name = gets.chomp
-game = GAME.new
-bet = 10
-game.player.bank -= bet
-game.dealer.bank -= bet
+game = Game.new
 
+game.player.bank -= 10
+game.dealer.bank -= 10
 
 
 cards_of_dealer = 'cards of dealer : **'
-score_of_dealer = 'score of dealer : * '
-score = "your score : #{game.count_score(game.player.cards)} "
+score_of_dealer = 'score of dealer :  '
+your_score = "your score : #{game.count_score(game.player.cards)} "
 your_bank = "your bank : #{game.player.bank}"
 your_cards = "your cards : #{game.player.cards}"
 
 while true
   puts cards_of_dealer
   puts score_of_dealer
-  puts score
+  puts your_score
   puts your_bank
   puts your_cards
   puts ''
@@ -136,13 +128,13 @@ while true
   end
 
   if game.player.methods.include?(method) && method == 'add_card'
-    game.send(method)
+    game.send(method,'player')
     puts '$'* 80
     puts 'you take one card'
     puts '$'* 80
     cards_of_dealer = 'cards of dealer : ***' if game.message_of_dealer == 'dealer added card'
     puts  game.message_of_dealer
-    score = "your score : #{game.count_score(game.player.cards)} "
+    your_score = "your score : #{game.count_score(game.player.cards)}"
     your_cards = "your cards : #{game.player.cards}"
     game.player.methods.delete(method)
   end
@@ -167,21 +159,29 @@ while true
     puts cards_of_dealer
     puts score_of_dealer
     puts '<' * 80
-    puts score
+    puts your_score
     puts your_bank
     puts your_cards
-    puts '><' * 80
+    puts '><' * 40
     puts "#{name},you want play second game?(yes/no)"
     answer = gets.chomp
     break if answer == 'no'
     if answer == 'yes'
-      game = GAME.new
-      bet += 10
-      game.player.bank -= bet
-      game.dealer.bank -= bet
+      puts '♠ ♤ ♥ ♡ ♣ ♧ ♦ ♢ ♠ ♤ ♥ ♡ ♣ ♧ ♦ ♢ ♠ ♤ ♥ ♡ ♣ ♧ ♦ ♢ ♠ ♤ ♥ ♡ ♣ ♧ ♦ ♢'
+
+      game.player.bank -= 10
+      game.dealer.bank -= 10
+      game.player.cards = []
+      game.dealer.cards = []
+      game.player.methods = %w(skip_a_move add_card open_all_cards)
+      game.dealer.methods = %w(skip_a_move add_card open_all_cards)
+
+      game.deck.create_cards
+      game.give_out_cards
+
       cards_of_dealer = 'cards of dealer : **'
-      score_of_dealer = 'score of dealer : * '
-      score = "your score : #{game.count_score(game.player.cards)} "
+      score_of_dealer = 'score of dealer :  '
+      your_score = "your score : #{game.count_score(game.player.cards)} "
       your_bank = "your bank : #{game.player.bank}"
       your_cards = "your cards : #{game.player.cards}"
     end
