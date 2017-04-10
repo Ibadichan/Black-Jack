@@ -1,4 +1,4 @@
-class Player
+class Player < Users
   attr_accessor :bank, :cards, :methods
 
   def initialize
@@ -6,5 +6,4 @@ class Player
     @cards =[]
     @methods = %w(skip_a_move add_card open_all_cards)
   end
-
 end
