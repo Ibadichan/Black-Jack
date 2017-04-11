@@ -39,13 +39,13 @@ while true
   method = gets.chomp.gsub(' ','_')
   method.downcase!
 
-  until Users::METHODS.include?(method)
+  until User::METHODS.include?(method)
     puts 'try again(write your action) !!! '
     method = gets.chomp.gsub(' ','_')
     method.downcase!
   end
 
-  if Users::METHODS.include?(method) && method == 'add_card'
+  if method == 'add_card'
     game.send(method,'player')
     puts '$'* 80
     puts 'you take one card'
@@ -56,7 +56,7 @@ while true
     your_cards = "your cards : #{game.player.cards}"
   end
 
-  if Users::METHODS.include?(method)  && method == 'skip_a_move'
+  if method == 'skip_a_move'
     game.send(method)
     puts '$'* 80
     puts 'you skip a move'

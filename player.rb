@@ -1,4 +1,4 @@
-class Player < Users
+class Player < User
   attr_accessor :bank, :cards
 
   def initialize

@@ -1,4 +1,4 @@
-class Dealer < Users
+class Dealer < User
   attr_accessor :bank, :cards, :message
 
   def initialize(players,deck)
@@ -11,9 +11,9 @@ class Dealer < Users
 
   def give_out_cards
     @players.each do |player|
-      player.cards << @deck.cards[0] << @deck.cards[1]
-      @deck.give_a_card(0)
-      @deck.give_a_card(1)
+      2.times do
+       player.cards << @deck.give_a_card
+      end
     end
   end
 

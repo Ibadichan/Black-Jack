@@ -1,4 +1,4 @@
-class Users
+class User
   METHODS =  %w(skip_a_move add_card open_all_cards)
 
   attr_accessor :bank, :cards
