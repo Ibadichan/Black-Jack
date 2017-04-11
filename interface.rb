@@ -13,12 +13,12 @@ puts 'For game enter your name please (:'
 name = gets.chomp
 game = Game.new
 
-game.player.bank -= game.bet
-game.dealer.bank -= game.bet
+game.player.bank -= Game::BET
+game.dealer.bank -= Game::BET
 
 cards_of_dealer = 'cards of dealer : **'
 score_of_dealer = 'score of dealer :  '
-your_score = "your score : #{game.score.count_score(game.player.cards)} "
+your_score = "your score : #{game.count_score(game.player.cards)} "
 your_bank = "your bank : #{game.player.bank}"
 your_cards = "your cards : #{game.player.cards}"
 
@@ -39,32 +39,30 @@ while true
   method = gets.chomp.gsub(' ','_')
   method.downcase!
 
-  until game.player.methods.include?(method)
+  until Users::METHODS.include?(method)
     puts 'try again(write your action) !!! '
     method = gets.chomp.gsub(' ','_')
     method.downcase!
   end
 
-  if game.player.methods.include?(method) && method == 'add_card'
+  if Users::METHODS.include?(method) && method == 'add_card'
     game.send(method,'player')
     puts '$'* 80
     puts 'you take one card'
     puts '$'* 80
     cards_of_dealer = 'cards of dealer : ***' if game.dealer.message == 'dealer added card'
     puts  game.dealer.message
-    your_score = "your score : #{game.score.count_score(game.player.cards)}"
+    your_score = "your score : #{game.count_score(game.player.cards)}"
     your_cards = "your cards : #{game.player.cards}"
-    game.player.methods.delete(method)
   end
 
-  if game.player.methods.include?(method) && method == 'skip_a_move'
+  if Users::METHODS.include?(method)  && method == 'skip_a_move'
     game.send(method)
     puts '$'* 80
     puts 'you skip a move'
     puts '$'* 80
     cards_of_dealer = 'cards of dealer : ***' if game.dealer.message == 'dealer added card'
     puts  game.dealer.message
-    game.player.methods.delete(method)
   end
 
   if method == 'open_all_cards' || (game.player.cards.size == 3  && game.dealer.cards.size == 3)
@@ -72,7 +70,7 @@ while true
     game.open_all_cards
     puts ''
     cards_of_dealer = "cards of dealer : #{game.dealer.cards}"
-    score_of_dealer = "score of dealer : #{game.score.count_score(game.dealer.cards)}"
+    score_of_dealer = "score of dealer : #{game.count_score(game.dealer.cards)}"
     puts '>' * 80
     puts cards_of_dealer
     puts score_of_dealer
@@ -87,18 +85,18 @@ while true
     if answer == 'yes'
       puts '♠ ♤ ♥ ♡ ♣ ♧ ♦ ♢ ♠ ♤ ♥ ♡ ♣ ♧ ♦ ♢ ♠ ♤ ♥ ♡ ♣ ♧ ♦ ♢ ♠ ♤ ♥ ♡ ♣ ♧ ♦ ♢'
 
-      game.player.bank -= game.bet
-      game.dealer.bank -= game.bet
+      game.player.bank -= Game::BET
+      game.dealer.bank -= Game::BET
       game.player.cards = []
       game.dealer.cards = []
-      game.player.methods = %w(skip_a_move add_card open_all_cards)
+      Player::METHODS = %w(skip_a_move add_card open_all_cards)
 
-      game.deck.create_cards
+      game.deck = Deck.new
       game.dealer.give_out_cards
 
       cards_of_dealer = 'cards of dealer : **'
       score_of_dealer = 'score of dealer :  '
-      your_score = "your score : #{game.score.count_score(game.player.cards)} "
+      your_score = "your score : #{game.count_score(game.player.cards)} "
       your_bank = "your bank : #{game.player.bank}"
       your_cards = "your cards : #{game.player.cards}"
     else

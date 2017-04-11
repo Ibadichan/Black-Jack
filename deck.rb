@@ -1,11 +1,16 @@
 class Deck
-  attr_accessor :all_cards
+  attr_accessor :cards
 
-  def create_cards
+  def initialize
     card_numbers = %w(2 3 4 5 6 7 8 9 10 Jack Queen King Ace)
-    @all_cards = []
+    @cards = []
     card_numbers.each do |card|
-      @all_cards << "#{card}♥" << "#{card}♣" << "#{card}♠" << "#{card}♦"
-      end
+      @cards << "#{card}♥" << "#{card}♣" << "#{card}♠" << "#{card}♦"
+    end
+    @cards.shuffle!
+  end
+
+  def give_a_card(index)
+    @cards.delete_at(index)
   end
 end

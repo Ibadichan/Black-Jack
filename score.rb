@@ -1,13 +1,18 @@
-class Score
-  def count_score(cards)
-    @count = 0
+module Score
+  def self.count(cards)
+    count = 0
     cards.each do |card|
-      card = card[0..-2] # выкидываю все ♠ ♤ ♥ ♡
-      @count += 10 if card == 'Jack' || card == 'Queen' || card == 'King'
-      @count += 1 if card == 'Ace' && @count > 10
-      @count += 11 if card == 'Ace' && @count <= 10
-      @count += card.to_i # если карта не картинка, преобразовываю к int и добавляю
+      card = card[0..-2]
+      count += card_value(card, count)
     end
-    @count
+    count
+  end
+
+  private
+
+  def self.card_value(card, count)
+    return 10 if ['Jack', 'Queen', 'King'].include? card
+    return (count > 10) ? 1 : 11 if card == 'Ace'
+    card.to_i
   end
 end
