@@ -1,16 +1,16 @@
 class Users
-  attr_accessor :bank, :cards, :methods
+  METHODS =  %w(skip_a_move add_card open_all_cards)
+
+  attr_accessor :bank, :cards
 
   def initialize
     @bank = 100
     @cards =[]
-    @methods = %w(skip_a_move add_card open_all_cards)
   end
 
   def add_card(deck)
     @deck = deck
-    element = @deck.all_cards[rand(@deck.all_cards.length)]
-    self.cards << element
-    @deck.all_cards.delete(element)
+    self.cards << @deck.cards[0]
+    @deck.give_a_card(0)
   end
 end
