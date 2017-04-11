@@ -10,7 +10,7 @@ class Deck
     @cards.shuffle!
   end
 
-  def give_a_card(index)
-    @cards.delete_at(index)
+  def give_a_card
+    @cards.pop
   end
 end
