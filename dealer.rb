@@ -11,9 +11,7 @@ class Dealer < User
 
   def give_out_cards
     @players.each do |player|
-      2.times do
-       player.cards << @deck.give_a_card
-      end
+      2.times { player.cards << @deck.give_a_card}
     end
   end
 

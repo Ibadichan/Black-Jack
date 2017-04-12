@@ -9,7 +9,6 @@ class User
   end
 
   def add_card(deck)
-    self.cards << deck.cards[0]
-    deck.give_a_card(0)
+    self.cards << deck.give_a_card
   end
 end
