@@ -1,17 +1,15 @@
 module Score
   def self.count(cards)
     count = 0
-    cards.each do |card|
-      count += card_value(card[0..-2], count)
-    end
+    cards.each { |card| count += card_value(card[0..-2], count) }
     count
   end
 
-  private
-
   def self.card_value(card, count)
-    return 10 if ['Jack', 'Queen', 'King'].include? card
-    return (count > 10) ? 1 : 11 if card == 'Ace'
+    return 10 if %w[Jack Queen King].include? card
+    return count > 10 ? 1 : 11 if card == 'Ace'
     card.to_i
   end
+
+  private_class_method :card_value
 end

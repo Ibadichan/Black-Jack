@@ -36,16 +36,16 @@ class Game
   def open_all_cards
     dealer = Score.count(@dealer.cards)
     player = Score.count(@player.cards)
-     if (dealer < player ||  dealer > 21) && player <= 21
-       @player.bank += BET * 2
-       puts 'YOU WIN  !!! +10$'
-     elsif (dealer > player || player > 21) && dealer <= 21
-       @dealer.bank += BET * 2
-       puts 'YOU LOST !!! -10$'
-     else
-       puts 'No one wins !!! +0$'
-       @dealer.bank += BET
-       @player.bank += BET
-     end
+    if (dealer < player ||  dealer > 21) && player <= 21
+      @player.bank += BET * 2
+      puts 'YOU WIN  !!! +10$'
+    elsif (dealer > player || player > 21) && dealer <= 21
+      @dealer.bank += BET * 2
+      puts 'YOU LOST !!! -10$'
+    else
+      puts 'No one wins !!! +0$'
+      @dealer.bank += BET
+      @player.bank += BET
+    end
   end
 end
